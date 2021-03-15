@@ -1,0 +1,10 @@
+.search-panel {
+    width: 45%;
+    height: 100%;
+    display: inline-block;
+    margin-right: 5%;
+}
+
+.search-panel > input {
+    width: 100%;
+}

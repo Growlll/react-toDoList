@@ -1,0 +1,19 @@
+html {
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: inherit;
+}
+
+.app {
+    width: 80%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.app-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
