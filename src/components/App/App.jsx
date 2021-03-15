@@ -10,35 +10,36 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.startNum = 100
+
     this.state = {
       todos: [
-        {id: 1, label: 'Learn React', important: false},
-        {id: 2, label: 'I\'m React', important: true},
-        {id: 3, label: 'I\'m profi', important: false},
-        {id: 4, label: 'Redux', important: false},
+        this.createTodoItem('Learn React'),
+        this.createTodoItem('I\'m React'),
+        this.createTodoItem('I\'m profi'),
+        this.createTodoItem('Redux')
       ]
     }
+  }
+
+  createTodoItem(text) {
+    return {id: this.startNum++, label: text, important: false, done: false}
   }
 
   deleteItem = (id) => {
     this.setState(({todos}) => {
       const idx = todos.findIndex((elem) => elem.id === id)
 
-      // return {
-      //   todos: [...todos.filter(el => el.id !== id)]
-      // }
-
       return {
-        todos: [...todos.slice(0, idx), ...todos.slice(idx + 1)]
+        todos: [...todos.filter(el => el.id !== id)]
       }
     })
   }
 
   addItem = (e) => {
     e.preventDefault()
-    this.setState(({ todos }) => {
-      const nextElemId = todos[todos.length - 1].id + 1
-      const newItem = {id: nextElemId, label: 'New Elem', important: false}
+    this.setState(({todos}) => {
+      const newItem = this.createTodoItem('Flux')
 
       return {
         todos: [
@@ -49,16 +50,46 @@ class App extends React.Component {
     })
   }
 
+  toggleProperty(arr, id, propName) {
+    const itemIdx = arr.findIndex((el) => el.id === id)
+    const oldItem = arr[itemIdx]
+    const newItem = {...oldItem, [propName]: !arr[itemIdx][propName]}
+
+    return {
+      todos: [...arr.slice(0, itemIdx), newItem, ...arr.slice(itemIdx + 1)]
+    }
+  }
+
+  onToggleDone = (id) => {
+    this.setState(({todos}) => {
+      return this.toggleProperty(todos, id, 'done')
+    })
+  }
+
+  onToggleImportant = (id) => {
+    this.setState(({todos}) => {
+      return this.toggleProperty(todos, id, 'important')
+    })
+  }
+
   render() {
+    const {todos} = this.state
+
+    const todoCount = todos.filter((item) => item.done === false).length
+    const done = todos.length - todoCount
+
     return (
       <div className='app'>
-        <AppHeader/>
+        <AppHeader todo={todoCount} done={done}/>
         <div className='app-filter'>
           <SearchPanel/>
           <ItemStatusFilter/>
         </div>
         <AddItem addItem={this.addItem}/>
-        <ToDoList todos={this.state.todos} onDeleted={this.deleteItem}/>
+        <ToDoList todos={todos}
+                  onDeleted={this.deleteItem}
+                  onToggleDone={this.onToggleDone}
+                  onToggleImportant={this.onToggleImportant}/>
       </div>
     );
   }
