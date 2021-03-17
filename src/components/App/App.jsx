@@ -18,7 +18,8 @@ class App extends React.Component {
         this.createTodoItem('I\'m React'),
         this.createTodoItem('I\'m profi'),
         this.createTodoItem('Redux')
-      ]
+      ],
+      filterValue: ''
     }
   }
 
@@ -28,18 +29,15 @@ class App extends React.Component {
 
   deleteItem = (id) => {
     this.setState(({todos}) => {
-      const idx = todos.findIndex((elem) => elem.id === id)
-
       return {
         todos: [...todos.filter(el => el.id !== id)]
       }
     })
   }
 
-  addItem = (e) => {
-    e.preventDefault()
+  addItem = (text) => {
     this.setState(({todos}) => {
-      const newItem = this.createTodoItem('Flux')
+      const newItem = this.createTodoItem(text)
 
       return {
         todos: [
@@ -72,9 +70,28 @@ class App extends React.Component {
     })
   }
 
-  render() {
-    const {todos} = this.state
+  onChangeFilter = (e) => {
+    this.setState({ filterValue: e.target.value })
+  }
 
+  onSearchChange = (text) => {
+    this.setState({ filterValue: text})
+  }
+
+  search(items, filterValue) {
+    if(!filterValue) return items
+
+    return items.filter(item => {
+      return item.label
+        .toLowerCase().trim()
+        .indexOf(this.state.filterValue.toLowerCase().trim()) >= 0
+    })
+  }
+
+  render() {
+    const {todos, filterValue} = this.state
+
+    const filterList = this.search(todos, filterValue)
     const todoCount = todos.filter((item) => item.done === false).length
     const done = todos.length - todoCount
 
@@ -82,11 +99,11 @@ class App extends React.Component {
       <div className='app'>
         <AppHeader todo={todoCount} done={done}/>
         <div className='app-filter'>
-          <SearchPanel/>
-          <ItemStatusFilter/>
+          <SearchPanel onSearchChange={this.onSearchChange} value={this.state.filterValue}/>
+          <ItemStatusFilter  />
         </div>
         <AddItem addItem={this.addItem}/>
-        <ToDoList todos={todos}
+        <ToDoList todos={filterList}
                   onDeleted={this.deleteItem}
                   onToggleDone={this.onToggleDone}
                   onToggleImportant={this.onToggleImportant}/>
