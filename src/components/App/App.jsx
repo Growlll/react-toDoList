@@ -19,7 +19,8 @@ class App extends React.Component {
         this.createTodoItem('I\'m profi'),
         this.createTodoItem('Redux')
       ],
-      filterValue: ''
+      filterValue: '',
+      statusFilter: 'all'
     }
   }
 
@@ -79,7 +80,7 @@ class App extends React.Component {
   }
 
   search(items, filterValue) {
-    if(!filterValue) return items
+    if (!filterValue) return items
 
     return items.filter(item => {
       return item.label
@@ -88,10 +89,25 @@ class App extends React.Component {
     })
   }
 
+  filter(items, statusFilter) {
+    switch (statusFilter) {
+      case 'active':
+        return items.filter( item => !item.done )
+      case 'done':
+        return items.filter( item => item.done )
+      default:
+        return items
+    }
+  }
+
+  onChangeStatusFilter = (statusFilter) => {
+    this.setState({ statusFilter: statusFilter })
+  }
+
   render() {
     const {todos, filterValue} = this.state
 
-    const filterList = this.search(todos, filterValue)
+    const filterList = this.search(this.filter(todos, this.state.statusFilter), filterValue)
     const todoCount = todos.filter((item) => item.done === false).length
     const done = todos.length - todoCount
 
@@ -100,7 +116,7 @@ class App extends React.Component {
         <AppHeader todo={todoCount} done={done}/>
         <div className='app-filter'>
           <SearchPanel onSearchChange={this.onSearchChange} value={this.state.filterValue}/>
-          <ItemStatusFilter  />
+          <ItemStatusFilter onChangeStatusFilter={this.onChangeStatusFilter} />
         </div>
         <AddItem addItem={this.addItem}/>
         <ToDoList todos={filterList}

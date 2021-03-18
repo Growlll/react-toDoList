@@ -1,17 +1,29 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './ItemStatusFilter.css'
+import Button from "./Button/Button";
 
-const ItemStatusFilter = () => {
-  return (
-    <div className='btn-group item-filter-status'>
-      <button type='button'
-              className='btn btn-info'>All</button>
-      <button type='button'
-              className='btn btn-outline-secondary'>Active</button>
-      <button type='button'
-              className='btn btn-outline-secondary'>Done</button>
-    </div>
-  )
+class ItemStatusFilter extends Component {
+  state = {
+    activeTab: 'done'
+  }
+
+  onClick = (value) => {
+    this.setState({
+      activeTab: value
+    })
+    this.props.onChangeStatusFilter(value)
+  }
+
+  render() {
+    return (
+      <div className='btn-group item-filter-status'>
+        <Button onClick={() => this.onClick('all')} value='All' activeTab={this.state.activeTab}/>
+        <Button onClick={() => this.onClick('active')} value='Active' activeTab={this.state.activeTab}/>
+        <Button onClick={() => this.onClick('done')} value='Done' activeTab={this.state.activeTab}/>
+      </div>
+    )
+  }
 }
+
 
 export default ItemStatusFilter;
