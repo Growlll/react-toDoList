@@ -4,7 +4,7 @@ import Button from "./Button/Button";
 
 class ItemStatusFilter extends Component {
   state = {
-    activeTab: 'done'
+    activeTab: 'all'
   }
 
   onClick = (value) => {

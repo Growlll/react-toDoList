@@ -14,10 +14,10 @@ class App extends React.Component {
 
     this.state = {
       todos: [
-        this.createTodoItem('Learn React'),
-        this.createTodoItem('I\'m React'),
-        this.createTodoItem('I\'m profi'),
-        this.createTodoItem('Redux')
+        this.createTodoItem('Your task'),
+        this.createTodoItem('You can add a task'),
+        this.createTodoItem('You can click on the task and finish it'),
+        this.createTodoItem('You can delete the task')
       ],
       filterValue: '',
       statusFilter: 'all'

@@ -11,3 +11,7 @@
     flex-grow: 1;
     padding: 5px 10px;
 }
+
+.require {
+    border: 1px solid red;
+}
